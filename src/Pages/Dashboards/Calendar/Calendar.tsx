@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PopUpWindow from "../../PopUpWindow/PopUpWindow";
+import PopUpWindow from "../../../features/PopUpWindow/PopUpWindow";
 import { format, eachDayOfInterval, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
 import { ru } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // стрелочки
@@ -103,9 +103,9 @@ const CalendarPage: React.FC = () => {
 
 			{activeDayButton && (
 				<PopUpWindow
-				visible={true}
-				fuulText={activeDayButton.name}
-				onClose={() => setActiveDayButton(null)}
+					visible={true}
+					fullText={{text: activeDayButton.name, author: "", date: ""}}
+					onClose={() => setActiveDayButton(null)}
 				/>
 			)}
 		</div>

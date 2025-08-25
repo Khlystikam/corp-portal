@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {  useSelector, useDispatch  } from 'react-redux';
 import type {  RootState  } from '../../../store/store'; 
 import {  toggleTodo, removeTodo  } from '../../../store/TodoData';
-import PopUpWindow from '../../PopUpWindow/PopUpWindow';
+import PopUpWindow from '../../../features/PopUpWindow/PopUpWindow';
 
 const TodoForm: React.FC = () => { 
     const todos = useSelector((state: RootState) => state.todo.todos);
@@ -49,7 +49,7 @@ const TodoForm: React.FC = () => {
             {activeTask && (
                 <PopUpWindow
                     visible={true}
-                    fuulText={activeTask.text}
+                    fullText={{ text: activeTask.text, author: "", date: "" }}
                     onClose={() => setActiveTask(null)}
                 />
             )}

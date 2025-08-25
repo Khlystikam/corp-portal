@@ -1,9 +1,9 @@
 // import React, { useState } from 'react';
 // import { useAppSelector, useAppDispatch } from './hooks';
 // import { addTask, removeTask } from './features/tasksSlice';
-import Header from './components/Header/Header';
-import Navbar from './components/Navbar/Navbar';
-import MainWindow from './components/MainWindow/MainWindow';
+import Header from './Pages/Header/Header';
+import Navbar from './Pages/Navbar/Navbar';
+import MainWindow from './Pages/MainWindow/MainWindow';
 
 import './styles/App.css'
 

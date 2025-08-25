@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import type { ChartEvent, ActiveElement, Chart  } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import type { Context } from "chartjs-plugin-datalabels";
-import PopUpWindow from '../PopUpWindow/PopUpWindow';
+import PopUpWindow from '../../../../features/PopUpWindow/PopUpWindow';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -46,14 +47,14 @@ const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
             },
         },
 
-        onHover: (event:any, elements:any) => {
-            const target = event.native ? event.native.target : event?.target;
-            if (target) {
-                target.style.cursor = elements.length ? "pointer" : "default";
+        onHover: (event: ChartEvent, elements: ActiveElement[]) => {
+            const mouseEvent = event.native as MouseEvent;
+            if (mouseEvent?.target instanceof HTMLElement) {
+                mouseEvent.target.style.cursor = elements.length ? "pointer" : "default";
             }
         },
 
-        onClick: (event: any, elements: any, chart: any) => {
+        onClick: (event: ChartEvent, elements: ActiveElement[], chart: Chart) => {
             console.log(event);
             if (elements.length > 0) {
                 const element = elements[0];
@@ -97,7 +98,7 @@ const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
             {activeTask && (
                 <PopUpWindow
                     visible={ true }
-                    fuulText={ activeTask.text }
+                    fullText={{ text: activeTask.text, author: "", date: "" }}
                     onClose={ () => setActiveTask(null) }
                 />
             )}

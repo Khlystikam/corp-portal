@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { togglecompletedTaskSlice } from '../../../store/CompletedTasksData';
-import PopUpWindow from '../../PopUpWindow/PopUpWindow';
-import TasksPieChart from '../../TasksPieChart/TasksPieChart';
+import PopUpWindow from '../../../features/PopUpWindow/PopUpWindow';
+import TasksPieChart from './TasksPieChart/TasksPieChart';
 import { Check } from 'lucide-react';
 
 import "./CompletedTasks.css";
@@ -12,7 +12,12 @@ import "./CompletedTasks.css";
 const CompletedTasks: React.FC = () => {
     const completedTaskSlices = useSelector((state: RootState) => state.completedTask.completedTasks);
     const dispatch = useDispatch();
-    const [activeTask, setActiveTask] = useState<{ id: string; text: string } | null>(null);
+    const [activeTask, setActiveTask] = useState<{
+        id: string;
+        text: string;
+        author: string;
+        date: string;
+    } | null>(null);
 
 
     // классы для отображения задач
@@ -20,8 +25,13 @@ const CompletedTasks: React.FC = () => {
     const classTaskElementsMade = generalClass + "bg-green-700 rounded-md hover:shadow-md cursor-pointer";
     const classTaskElementsNoMade = generalClass + "rounded-md hover:shadow-md bg-red-900/50 cursor-pointer";
 
-    const openPopUpFullTask = (task: { id: string; text: string }) => {
-        setActiveTask(task);
+    const openPopUpFullTask = (id: string, text: string, author?: string, date?: string) => {
+        setActiveTask({
+            id,
+            text,
+            author: author ?? "",
+            date: date ?? "",
+        });
     };
 
 
@@ -61,23 +71,23 @@ const CompletedTasks: React.FC = () => {
     const taskElements = () => {
         return(
             <div className="completed-task-elements flex flex-col justify-start items-center w-9/10 h-1/1 gap-3 rounded-xl">
-                {completedTaskSlices.map((item) => (
+                {completedTaskSlices.map(({ id, completed, text, author, date }) => (
                     <div
-                        key={item.id}
-                        className={item.completed ? classTaskElementsMade : classTaskElementsNoMade}
-                        onClick={() => openPopUpFullTask(item)}
+                        key={id}
+                        className={completed ? classTaskElementsMade : classTaskElementsNoMade}
+                        onClick={() => openPopUpFullTask(id, text, author, date)}
                     >
                         <input
                             className="completed-task-checkbox size-4 cursor-pointer"
                             type="checkbox"
                             placeholder="checkbox"
-                            checked={item.completed}
+                            checked={completed}
                             onClick={(e) => e.stopPropagation()}
-                            onChange={() => dispatch(togglecompletedTaskSlice(item.id))}
+                            onChange={() => dispatch(togglecompletedTaskSlice(id))}
                         />
                         <ul className="completed-task-box-value w-1/1 text-left">
                             <li className="completed-task-item-value w-1/1">
-                                {item.text.length > 35 ? item.text.slice(0, 35) + "..." : item.text}
+                                {text.length > 35 ? text.slice(0, 35) + "..." : text}
                             </li>
                         </ul>
                     </div>
@@ -85,9 +95,9 @@ const CompletedTasks: React.FC = () => {
 
                 {activeTask && (
                     <PopUpWindow
-                        visible={ true }
-                        fuulText={ activeTask.text }
-                        onClose={ () => setActiveTask(null) }
+                        visible={true}
+                        fullText={{ text: activeTask.text, author: activeTask.author, date: activeTask.date }}
+                        onClose={() => setActiveTask(null)}
                     />
                 )}
             </div>

@@ -3,11 +3,15 @@ import { createPortal } from "react-dom";
 
 interface Props {
     visible: boolean;
-    fuulText: string;
+    fullText: {
+        text: string;
+        author: string;
+        date: string;
+    };
     onClose: () => void;
 }
 
-const PopUpWindow: React.FC<Props> = ( { visible, onClose, fuulText } ) => {
+const PopUpWindow: React.FC<Props> = ( { visible, onClose, fullText } ) => {
     const [visiblePopUp, setVisiblePopUp] = useState<string>("hidden");
 
     useEffect(() => {
@@ -25,21 +29,19 @@ const PopUpWindow: React.FC<Props> = ( { visible, onClose, fuulText } ) => {
                 </p>
 
                 <p className="pop-up-window-text w-full h-full bg-gray-600/20 rounded-2xl p-4">
-                    { fuulText }
+                    { fullText.text }
                 </p>
 
-                <div className="pop-up-window-info flex flex-row justify-between items-center w-full text-gray-400">
-                    <p className="pop-up-window-info-autor">
-                        Автор: Максим Морской
-                    </p>
-                    <p className="pop-up-window-info-date">
-                        Дата постановки задачи: 10.08.25
-                    </p>
-                </div>
+                {fullText.author && fullText.date && (
+                    <div className="pop-up-window-info ...">
+                        <p className="pop-up-window-info-author">{ fullText.author }</p>
+                        <p className="pop-up-window-info-date">{ fullText.date }</p>
+                    </div>
+                )}
 
                 <button
                     title="button"
-                    className="pop-up-close absolute top-2 right-2 w-4 cursor-pointer z-1000"
+                    className="pop-up-close absolute top-2 right-2 w-6 cursor-pointer z-1000"
                     onClick={ onClose }
                 >
                     <img
