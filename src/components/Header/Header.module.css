@@ -1,0 +1,13 @@
+.Logo {
+    transform: scale(1);
+    transition: 0.3s;
+}
+
+.Logo:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+
+.TopbarSearch:focus {
+    outline: none;
+}

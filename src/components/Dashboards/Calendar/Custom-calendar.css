@@ -1,0 +1,61 @@
+/* Переопределяем цвет фона ячеек */
+.rbc-btn-group button {
+    color: #000000;
+    padding: 0.15rem 0.5rem;
+}
+
+button.rbc-active {
+    background-color: #b3b3b3;
+}
+
+/* Цвет рамки события */
+.rbc-event {
+    background-color: #6366f1 !important; /* фиолетовый */
+    border: none;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Навигация и заголовки */
+.rbc-toolbar {
+    background-color: #bebebe70;
+    color: #ffffff;
+    padding: 0;
+    font-weight: bold;
+}
+
+.rbc-toolbar-label {
+    width: 10%;
+    font-size: 0.8rem;
+    color: #ffffff;
+}
+
+.rbc-off-range {
+    color: #d1d5db;
+}
+
+.rbc-month-view .rbc-day-bg {
+    background-color: #4A5565;
+    border-radius: 0;
+}
+
+.rbc-calendar * {
+    border-radius: 10px;
+}
+
+.rbc-header {
+    border-radius: 0;
+}
+
+.rbc-button-link {
+    color: #c7c7c7;
+    padding: 0.15rem 0.5rem;
+}
+
+.rbc-event {
+    border-radius: 4px;
+    font-size: 10px;
+    margin-top: -5px;
+}
