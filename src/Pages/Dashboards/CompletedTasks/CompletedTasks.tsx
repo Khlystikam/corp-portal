@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../../store/store';
+import type { CompletedTask } from '../../../store/CompletedTasksData';
 import { togglecompletedTaskSlice } from '../../../store/CompletedTasksData';
 import PopUpWindow from '../../../features/PopUpWindow/PopUpWindow';
 import TasksPieChart from './TasksPieChart/TasksPieChart';
@@ -10,14 +11,9 @@ import "./CompletedTasks.css";
 
 
 const CompletedTasks: React.FC = () => {
-    const completedTaskSlices = useSelector((state: RootState) => state.completedTask.completedTasks);
+    const completedTasks = useSelector((state: RootState) => state.completedTask.completedTasks);
     const dispatch = useDispatch();
-    const [activeTask, setActiveTask] = useState<{
-        id: string;
-        text: string;
-        author: string;
-        date: string;
-    } | null>(null);
+    const [activeTask, setActiveTask] = useState<CompletedTask | null>(null);
 
 
     // классы для отображения задач
@@ -25,20 +21,17 @@ const CompletedTasks: React.FC = () => {
     const classTaskElementsMade = generalClass + "bg-green-700 rounded-md hover:shadow-md cursor-pointer";
     const classTaskElementsNoMade = generalClass + "rounded-md hover:shadow-md bg-red-900/50 cursor-pointer";
 
-    const openPopUpFullTask = (id: string, text: string, author?: string, date?: string) => {
-        setActiveTask({
-            id,
-            text,
-            author: author ?? "",
-            date: date ?? "",
-        });
+
+    const openPopUpFullTask = (task: CompletedTask) => {
+        console.log(task);
+        setActiveTask(task);
     };
 
 
     // функция вывода данных для диаграммы
     const progressBarCounts = () => {
-        const completedTrueCount = completedTaskSlices.filter(task => task.completed).length;
-        const completedFalseCount = completedTaskSlices.filter(task => !task.completed).length;
+        const completedTrueCount = completedTasks.filter(task => task.completed).length;
+        const completedFalseCount = completedTasks.filter(task => !task.completed).length;
         const sumCompletedCount = completedTrueCount + completedFalseCount;
 
         // функция показа completed при выполнении всех задач
@@ -57,52 +50,61 @@ const CompletedTasks: React.FC = () => {
                     <TasksPieChart completed={ completedTrueCount } total={ sumCompletedCount } />
                 );
             }
-        }
+        };
 
         return(
             <>
                 { completedPieChart() }
             </>
         );
-    }
+    };
 
 
     // функция вывода списка задач с возможностью отмечать их выполнения
     const taskElements = () => {
         return(
             <div className="completed-task-elements flex flex-col justify-start items-center w-9/10 h-1/1 gap-3 rounded-xl">
-                {completedTaskSlices.map(({ id, completed, text, author, date }) => (
-                    <div
-                        key={id}
-                        className={completed ? classTaskElementsMade : classTaskElementsNoMade}
-                        onClick={() => openPopUpFullTask(id, text, author, date)}
-                    >
-                        <input
-                            className="completed-task-checkbox size-4 cursor-pointer"
-                            type="checkbox"
-                            placeholder="checkbox"
-                            checked={completed}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={() => dispatch(togglecompletedTaskSlice(id))}
-                        />
-                        <ul className="completed-task-box-value w-1/1 text-left">
-                            <li className="completed-task-item-value w-1/1">
-                                {text.length > 35 ? text.slice(0, 35) + "..." : text}
-                            </li>
-                        </ul>
-                    </div>
-                ))}
+                {completedTasks.map((task: CompletedTask) => {
+                    const { id, completed, text  } = task;
+                    console.log(task);
+
+                    return (
+                        <div
+                            key={id}
+                            className={completed ? classTaskElementsMade : classTaskElementsNoMade}
+                            onClick={() => openPopUpFullTask(task)}
+                        >
+                            <input
+                                className="completed-task-checkbox size-4 cursor-pointer"
+                                title="checkbox"
+                                type="checkbox"
+                                checked={completed}
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={() => dispatch(togglecompletedTaskSlice(id))}
+                            />
+                            <ul className="completed-task-box-value w-1/1 text-left">
+                                <li className="completed-task-item-value w-1/1">
+                                    {text.length > 35 ? `${text.slice(0, 35)}...` : text}
+                                </li>
+                            </ul>
+                        </div>
+                    );
+                })}
 
                 {activeTask && (
                     <PopUpWindow
-                        visible={true}
-                        fullText={{ text: activeTask.text, author: activeTask.author, date: activeTask.date }}
+                        visible={!!activeTask}
+                        fullText={{
+                            text: activeTask?.text || "",
+                            author: activeTask?.author || "",
+                            date: activeTask?.date || ""
+                        }}
                         onClose={() => setActiveTask(null)}
                     />
                 )}
             </div>
         );
-    }
+    };
 
 
     // вывод диаграммы и задач на месяц

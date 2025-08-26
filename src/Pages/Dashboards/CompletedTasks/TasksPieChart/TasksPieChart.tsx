@@ -56,6 +56,7 @@ const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
 
         onClick: (event: ChartEvent, elements: ActiveElement[], chart: Chart) => {
             console.log(event);
+            
             if (elements.length > 0) {
                 const element = elements[0];
                 const datasetIndex = element.datasetIndex;

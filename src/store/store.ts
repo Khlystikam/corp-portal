@@ -14,7 +14,6 @@ store.subscribe(() => {
     const state = store.getState();
     localStorage.setItem('todos', JSON.stringify(state.todo.todos));
     localStorage.setItem('completedTasks', JSON.stringify(state.completedTask.completedTasks));
-    localStorage.removeItem('completedTasks');
 });
 
 // Типы для использования в хуках
