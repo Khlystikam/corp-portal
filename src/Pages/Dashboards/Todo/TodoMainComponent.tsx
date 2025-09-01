@@ -27,7 +27,7 @@ const TodoMainComponent: React.FC = () => {
             </p>
             <div className="flex gap-2 w-9/10 mb-4">
                 <input
-                    className="todo-input-text flex-1 h-8 rounded-lg bg-fuchsia-50 text-black p-2"
+                    className="todo-input-text flex-1 h-8 rounded-md bg-fuchsia-50 text-black p-2"
                     type="text"
                     placeholder="Новая запись ..."
                     value={text}

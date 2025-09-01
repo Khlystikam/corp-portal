@@ -23,7 +23,6 @@ const CompletedTasks: React.FC = () => {
 
 
     const openPopUpFullTask = (task: CompletedTask) => {
-        console.log(task);
         setActiveTask(task);
     };
 
@@ -66,7 +65,6 @@ const CompletedTasks: React.FC = () => {
             <div className="completed-task-elements flex flex-col justify-start items-center w-9/10 h-1/1 gap-3 rounded-xl">
                 {completedTasks.map((task: CompletedTask) => {
                     const { id, completed, text  } = task;
-                    console.log(task);
 
                     return (
                         <div

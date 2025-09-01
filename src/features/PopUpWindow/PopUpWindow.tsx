@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from "react-dom";
+import module from './PopUpWindow.module.css';
 
 interface Props {
     visible: boolean;
@@ -20,28 +21,35 @@ const PopUpWindow: React.FC<Props> = ( { visible, onClose, fullText } ) => {
 
 
     return createPortal(
-        <div className="pop-up-window-container absolute top-0 left-0 flex-col justify-start items-center gap-5 w-full h-full bg-gray-900/80 z-1000">
+        <div className={ module.popUpWindowContainer }>
             <div
-                className={`"pop-up-window absolute top-2/8 left-2/8 flex-col justify-start items-center gap-5 w-1/2 h-1/2 rounded-3xl bg-gray-700 p-10 " ${ visiblePopUp }`}
+                className={`${module.popUpWindow} ${visiblePopUp}`}
             >
-                <p className="pop-up-window-title text-orange-200 font-bold">
+                <p className={ module.popUpWindowTitle }>
                     Подробное описание вашей задачи
                 </p>
 
-                <p className="pop-up-window-text w-full h-full bg-gray-600/20 rounded-2xl p-4">
+                <p className={ module.popUpWindowText }>
                     { fullText.text }
                 </p>
 
                 {fullText.author && fullText.date && (
-                    <div className="pop-up-window-info ...">
-                        <p className="pop-up-window-info-author">{ fullText.author }</p>
-                        <p className="pop-up-window-info-date">{ fullText.date }</p>
+                    <div className={ module.popUpWindowInfo }>
+                        <div className={ module.popUpWindowInfo__author }>
+                            <p className={ module.popUpWindowInfo__authorTitle }>Автор задачи:</p>
+                            <p className={ module.popUpWindowInfo__authorText }>{ fullText.author }</p>
+                        </div>
+                        
+                        <div className={ module.popUpWindowInfo__date }>
+                            <p className={ module.popUpWindowInfo__dateTitle }>Дата постановки:</p>
+                            <p className= { module.popUpWindowInfo__dateText }>{ fullText.date }</p>
+                        </div>
                     </div>
                 )}
 
                 <button
                     title="button"
-                    className="pop-up-close absolute top-2 right-2 w-6 cursor-pointer z-1000"
+                    className={ module.popUpClose }
                     onClick={ onClose }
                 >
                     <img
@@ -50,9 +58,7 @@ const PopUpWindow: React.FC<Props> = ( { visible, onClose, fullText } ) => {
                     />
                 </button>
             </div>
-        </div>,
-
-        document.body
+        </div>, document.body
     );
 };
 

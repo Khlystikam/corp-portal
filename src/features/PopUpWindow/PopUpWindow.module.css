@@ -1,0 +1,82 @@
+/* Контейнер popup */
+.popUpWindowContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1.25rem; /* 20px */
+	width: 100%;
+	height: 100%;
+	background-color: rgba(17, 24, 39, 0.8); /* bg-gray-900/80 */
+	z-index: 1000;
+}
+
+/* Само окно */
+.popUpWindow {
+	position: absolute;
+	top: 25%;  /* top-2/8 */
+	left: 25%; /* left-2/8 */
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1.25rem;
+	width: 50%;
+	height: 50%;
+	border-radius: 1.5rem; /* rounded-3xl */
+	background-color: #374151; /* bg-gray-700 */
+	padding: 2.5rem; /* p-10 */
+}
+
+/* Заголовок */
+.popUpWindowTitle {
+	color: #fed7aa; /* text-orange-200 */
+	font-weight: bold;
+}
+
+/* Основной текст */
+.popUpWindowText {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(75, 85, 99, 0.2); /* bg-gray-600/20 */
+	color: #f9fafb; /* text-gray-50 */
+	border-radius: 1rem; /* rounded-2xl */
+	padding: 1rem; /* p-4 */
+}
+
+/* Блок информации */
+.popUpWindowInfo {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 100%;
+	font-size: 1rem; /* text-base */
+	color: #fed7aa; /* text-orange-200 */
+}
+
+.popUpWindowInfo__author,
+.popUpWindowInfo__date {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	gap: 0.5rem; /* gap-2 */
+}
+
+.popUpWindowInfo__authorTitle,
+.popUpWindowInfo__dateTitle {
+	color: #f9fafb; /* text-gray-50 */
+}
+
+/* Кнопка закрытия */
+.popUpClose {
+	position: absolute;
+	top: 0.5rem; /* top-2 */
+	right: 0.5rem; /* right-2 */
+	width: 1.5rem; /* w-6 */
+	cursor: pointer;
+	z-index: 1000;
+}

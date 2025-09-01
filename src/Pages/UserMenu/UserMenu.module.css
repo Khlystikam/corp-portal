@@ -1,0 +1,26 @@
+.hidden {
+	display: none;
+}
+
+.flex {
+	display: flex;
+}
+
+.loginBtn {
+	width: 60%;
+	height: 70%;
+	border-radius: 4px;
+	background-color: #1a4eeb;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.loginBtn:hover {
+	background-color: #1344d6;
+	transform: scale(1.05);
+	transition: 0.3s;
+}
+
+.loginBtn:active {
+	background-color: #162d72;
+}

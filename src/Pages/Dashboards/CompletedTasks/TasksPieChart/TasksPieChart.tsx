@@ -5,6 +5,7 @@ import type { ChartEvent, ActiveElement, Chart  } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import type { Context } from "chartjs-plugin-datalabels";
 import PopUpWindow from '../../../../features/PopUpWindow/PopUpWindow';
+import type { CompletedTask } from '../../../../store/CompletedTasksData';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -14,12 +15,13 @@ interface Props {
 }
 
 const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
-    const [activeTask, setActiveTask] = useState<{ id: string; text: string } | null>(null);
+    const [activeTask, setActiveTask] = useState<CompletedTask | null>(null);
 
-    const openPopUpFullTask = (completed: { id: string; text: string }) => {
-        setActiveTask(completed);
+    const openPopUpFullTask = (item:any) => {
+        setActiveTask(item);
     };
 
+    // стили для кругового графика выполнения задач
     const options = {
         cutout: "30%",
         maintainAspectRatio: false,
@@ -59,16 +61,13 @@ const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
             
             if (elements.length > 0) {
                 const element = elements[0];
+                console.log(element);
                 const datasetIndex = element.datasetIndex;
                 const index = element.index;
-
-                // например: completed или total-completed
                 const value = chart.data.datasets[datasetIndex].data[index];
+                console.log(value)
 
-                openPopUpFullTask({
-                    id: String(index),
-                    text: `Значение: ${value}`
-                });
+                openPopUpFullTask(element);
             }
         },
     }
