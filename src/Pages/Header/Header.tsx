@@ -5,13 +5,12 @@ import module from './Header.module.css';
 
 const Header: React.FC = () => {
 	return (
-		<div className={ module.headerContainer }>
-			<div className={ module.myLogo }>
-				<a className={ module.myLogo__a } href="/">
-					<img className={ module.myLogo__img } src="./logo/logo.svg" alt="logo" />
+		<div className="flex justify-between items-center w-screen h-1/12 bg-gray-800 rounded-b-2xl">
+			<div className="my-logo flex items-center justify-center w-1/10">
+				<a className="size-15" href="/">
+				<img className={`${module.Logo} size-12 h-auto p-2`} src="./logo/logo.svg" alt="logo" />
 				</a>
 			</div>
-
 			<div className={ module.search }>
 				<form action="/search">
 					<svg
@@ -31,7 +30,7 @@ const Header: React.FC = () => {
 				</form>
 			</div>
 
-			<div className={ module.loginFormMenu }>
+			<div className="login-form-menu flex items-center justify-center w-1/10 h-1/1">
 				<UserMenu />
 			</div>
 		</div>
