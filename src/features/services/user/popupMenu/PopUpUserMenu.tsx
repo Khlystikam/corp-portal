@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import LogoutButton from '../LogoutButton';
 
 type PopUpUserMenuProps = {
 	onClose: () => void;
@@ -38,22 +39,17 @@ const PopUpUserMenu = ({ onClose }: PopUpUserMenuProps) => {
 				{menuUserItems.map(({ id, name, href }) => (
 					<li key={id} className="w-9/10 bg-gray-700 rounded-md">
 						<Link
-						to={href}
-						className="flex flex-row gap-3 w-full p-2 rounded-md text-gray-400 font-semibold hover:text-gray-50 hover:bg-gray-600 cursor-pointer text-left delay-50"
+							to={href}
+							className="flex flex-row gap-3 w-full p-2 rounded-md text-gray-400 font-semibold hover:text-gray-50 hover:bg-gray-600 cursor-pointer text-left delay-50"
 						>
-						{name}
+							{name}
 						</Link>
 					</li>
 				))}
 			</ul>
 
 			<span className="flex flex-col items-center gap-3 w-full">
-				<button
-					onClick={() => console.log("Выйти")}
-					className="flex flex-row gap-3 w-9/10 p-2 rounded-md text-gray-100 font-semibold  bg-red-900 hover:bg-red-800 cursor-pointer text-left delay-50"
-				>
-					Выйти из аккаунта
-				</button>
+				<LogoutButton />
 			</span>
 		</div>
 	);

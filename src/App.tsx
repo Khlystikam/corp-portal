@@ -18,7 +18,7 @@ function App() {
 		<>
 			<div className="relative flex flex-col w-screen h-screen bg-gray-900 z-0">
 				<div className={`${hideNotification ? "hidden" : "flex"} "announcement top-0 left-0 flex-row justify-center items-center gap-30 w-screen h-10 min-h-10 bg-white "`}>
-					<p className="text-black">Это демоверсия портала для портфолио. Портал будет еще наполняться дополнительным функционалом.</p>
+					<p className="text-black">Для отображения всех данных залогиньтесь! Это демоверсия портала для портфолио. Портал будет еще наполняться дополнительным функционалом.</p>
 					<button
 						className="w-20 h-4 flex items-center justify-center rounded p-4 cursor-pointer bg-blue-500 text-white hover:bg-blue-600"
 						type="button"

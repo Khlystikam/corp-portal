@@ -1,48 +1,49 @@
-import {useState} from 'react';
-import PopUpUserMenu from './popupMenu/PopUpUserMenu';
-
+import { useState } from "react";
+import PopUpUserMenu from "./popupMenu/PopUpUserMenu";
+import { useSelector } from "react-redux";
+import { selectUserName, selectIsAuth } from "../../../store/userSlice";
 
 const UserMenuActive = () => {
 	const [userImgUrl, setUserImgUrl] = useState<string>("");
-	const [popUpMenuActive, setPopUpMenuActive] = useState<boolean>(false);
-
-	const nameUser:string = "loginDemo";
 
 	if (!userImgUrl) {
 		setUserImgUrl("/projects/project-1/assets/user/no-foto/no_photo_user.webp");
 	}
 
+	const [popUpMenuActive, setPopUpMenuActive] = useState<boolean>(false);
+
+	const nameUser = useSelector(selectUserName) || "Гость";
+	const isAuth = useSelector(selectIsAuth);
+
 	const handleActive = () => {
-		if (!popUpMenuActive){
-			setPopUpMenuActive(true);
-		} else {
-			setPopUpMenuActive(false);
-		}
-		
+		setPopUpMenuActive((prev) => !prev);
 	};
 
-	return(
-		<div className="relative flex flex-row justify-between items-center w-1/1">
-			<h3 className="w-1/3 text-1 text-orange-200">
-				{ nameUser }
-			</h3>
+	return (
+		<div className="relative flex flex-row justify-between items-center w-full">
+		<h3 className="w-1/3 text-1 text-orange-200">{nameUser}</h3>
+
+		{isAuth ? (
+			<>
 			<button
 				type="button"
 				className="w-1/5 rounded-md overflow-hidden cursor-pointer"
-				onClick={ handleActive }
+				onClick={handleActive}
 			>
-				<img
-					src={ userImgUrl }
-					alt="photo user"
-					className="w-1/1 h-auto"
-				/>
+				<img src={userImgUrl} alt="photo user" className="w-full h-auto" />
 			</button>
 
 			{popUpMenuActive && (
 				<PopUpUserMenu onClose={() => setPopUpMenuActive(false)} />
 			)}
+			</>
+		) : (
+			<button type="button" className="text-orange-300">
+				Войти
+			</button>
+		)}
 		</div>
-	)
+	);
 };
 
 export default UserMenuActive;

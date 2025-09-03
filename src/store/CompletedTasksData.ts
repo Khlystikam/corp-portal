@@ -1,90 +1,100 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface CompletedTask {
-    id: string;
-    text: string;
-    completed: boolean;
-    author: string;
-    date: string;
+	id: number;
+	user_id: number;
+	title: string;
+	description: string;
+	status: number;
+	deadline: string;
+	created_at: string;
 }
 
 interface CompletedTaskState {
-    completedTasks: CompletedTask[];
+	completedTasks: CompletedTask[];
+	loading: boolean;
+	error: string | null;
 }
 
-const savedCompletedTasks = localStorage.getItem('completedTasks');
-
 const initialState: CompletedTaskState = {
-        completedTasks: savedCompletedTasks
-        ? JSON.parse(savedCompletedTasks).map((task: Partial<CompletedTask>) => ({
-            id: task.id,
-            text: task.text,
-            completed: task.completed,
-            author: task.author,
-            date: task.date,
-        }))
-        : [
-            { id: nanoid(), text: 'Закончить проект', completed: true, author: "Солик Михаил", date: "02.08.25" },
-            { id: nanoid(), text: 'Сделать отчет за неделю', completed: false, author: "Сергиенко Виталий", date: "05.08.25" },
-            { id: nanoid(), text: 'Дать фидбэк по api', completed: true, author: "Иванов Андрей", date: "07.08.25" },
-            { id: nanoid(), text: 'Просмотреть данные за месяц', completed: false, author: "Коваленко Дарья", date: "08.08.25" },
-            { id: nanoid(), text: 'Обновить документацию по проекту', completed: false, author: "Лебедев Артём", date: "09.08.25" },
-            { id: nanoid(), text: 'Провести тестирование новой версии', completed: true, author: "Фролова Марина", date: "10.08.25" },
-            { id: nanoid(), text: 'Собрать статистику по пользователям', completed: false, author: "Савченко Павел", date: "11.08.25" },
-            { id: nanoid(), text: 'Запланировать встречу с командой', completed: true, author: "Рыбакова Алина", date: "12.08.25" },
-            { id: nanoid(), text: 'Проверить корректность API-ответов', completed: false, author: "Орлов Денис", date: "13.08.25" },
-            { id: nanoid(), text: 'Подготовить презентацию для клиента', completed: true, author: "Сидоренко Игорь", date: "14.08.25" },
-            { id: nanoid(), text: 'Обновить данные в CRM', completed: false, author: "Гончарова Ольга", date: "15.08.25" },
-            { id: nanoid(), text: 'Написать отчёт по выполненным задачам за месяц', completed: false, author: "Мельник Виктор", date: "16.08.25" },
-        ],
+	completedTasks: [],
+	loading: false,
+	error: null,
 };
 
+// 🔹 async thunk для загрузки с бэка
+export const fetchCompletedTasks = createAsyncThunk<
+	CompletedTask[],
+	number,
+	{ rejectValue: string }
+	>(
+	"completedTask/fetchCompletedTasks",
+	async (userId, thunkAPI) => {
+		try {
+		const response = await fetch(
+			`https://projects.dev-khlystikam.ru/projects/php/corp-portal/getCompletedTasks.php?user_id=${userId}`
+		);
+		const data = await response.json();
+		return data.data; // сервер отдаёт { success, data: [...] }
+		} catch (err) {
+		return thunkAPI.rejectWithValue("Ошибка загрузки задач");
+		}
+	}
+);
+
 const completedTaskSlice = createSlice({
-    name: 'completedTask',
-    initialState,
-    reducers: {
-        addCompletedTaskPrepared: {
-            reducer(state, action: PayloadAction<CompletedTask>) {
-                state.completedTasks.push(action.payload);
-            },
-            prepare(text: string, author: string, date: string) {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        text,
-                        completed: false,
-                        author,
-                        date
-                    }
-                };
-            }
-        },
-        
-        removeCompletedTask(state, action: PayloadAction<string>) {
-            state.completedTasks = state.completedTasks.filter(task => task.id !== action.payload);
-        },
+	name: "completedTask",
+	initialState,
+	reducers: {
+		addCompletedTask(state, action: PayloadAction<CompletedTask>) {
+		state.completedTasks.push(action.payload);
+		},
 
-        addCompletedTask(state, action: PayloadAction<CompletedTask>) {
-            state.completedTasks.push(action.payload);
-        },
+		removeCompletedTask(state, action: PayloadAction<number>) {
+		state.completedTasks = state.completedTasks.filter(
+			(task) => task.id !== action.payload
+		);
+		},
 
-        toggleCompletedTask(state, action: PayloadAction<string>) {
-            const task = state.completedTasks.find(task => task.id === action.payload);
-            if (task) {
-                task.completed = !task.completed;
-            }
-        },
+		updateTaskStatus(
+		state,
+		action: PayloadAction<{ id: number; status: number }>
+		) {
+		const task = state.completedTasks.find(
+			(task) => task.id === action.payload.id
+		);
+		if (task) {
+			task.status = action.payload.status;
+		}
+		},
 
-        togglecompletedTaskSlice(state, action: PayloadAction<string>) {
-            const todo = state.completedTasks.find(completedTaskstate => completedTaskstate.id === action.payload); if (todo) { todo.completed = !todo.completed; }
-        },
-
-        loadFromStorage(state, action: PayloadAction<CompletedTask[]>) {
-            state.completedTasks = action.payload;
-        }
-    }
+		loadFromStorage(state, action: PayloadAction<CompletedTask[]>) {
+		state.completedTasks = action.payload;
+		},
+	},
+	extraReducers: (builder) => {
+		builder
+		.addCase(fetchCompletedTasks.pending, (state) => {
+			state.loading = true;
+			state.error = null;
+		})
+		.addCase(fetchCompletedTasks.fulfilled, (state, action) => {
+			state.loading = false;
+			state.completedTasks = action.payload;
+		})
+		.addCase(fetchCompletedTasks.rejected, (state, action) => {
+			state.loading = false;
+			state.error = action.payload || "Ошибка";
+		});
+	},
 });
 
-export const { addCompletedTaskPrepared, removeCompletedTask, toggleCompletedTask, loadFromStorage, addCompletedTask, togglecompletedTaskSlice } = completedTaskSlice.actions;
+export const {
+	addCompletedTask,
+	removeCompletedTask,
+	updateTaskStatus,
+	loadFromStorage,
+} = completedTaskSlice.actions;
+
 export default completedTaskSlice.reducer;

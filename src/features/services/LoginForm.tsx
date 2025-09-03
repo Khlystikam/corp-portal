@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { setUser } from "../../store/userSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store/store";
+
+// clearUser
+
 import styles from "./LoginForm.module.css";
 
 interface Props {
@@ -9,6 +15,7 @@ interface Props {
 }
 
 const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
+	const dispatch = useDispatch<AppDispatch>();
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [error, setError] = useState<string>("");
@@ -17,13 +24,25 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 
 	const loginDemo = () => (
 		<span className={styles.colorFocus}>
-			logindemo@dev-khlystikam.ru
+			<button
+				className="cursor-pointer"
+				title="button"
+				onClick={()=> navigator.clipboard.writeText("logindemo@dev-khlystikam.ru")}
+			>
+				logindemo@dev-khlystikam.ru
+			</button>
 		</span>
 	);
 
 	const passwordDemp = () => (
 		<span className={styles.colorFocus}>
-			passwordLoginDemo
+			<button
+				className="cursor-pointer"
+				title="button"
+				onClick={()=> navigator.clipboard.writeText("passwordLoginDemo")}
+			>
+				passwordLoginDemo
+			</button>
 		</span>
 	);
 
@@ -38,7 +57,7 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 
 		try {
 			const response = await fetch(
-				"/projects/php/corp-portal/login.php",
+				"https://projects.dev-khlystikam.ru/projects/php/corp-portal/login.php",
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
@@ -49,6 +68,9 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 			const data = await response.json();
 
 			if (data.success) {
+				console.log(data);
+				console.log(data.user.name);
+				dispatch(setUser(data.user));
 				onActive();
 			} else {
 				setError(data.message || "Неверный email или пароль");

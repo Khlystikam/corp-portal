@@ -98,7 +98,11 @@ const TasksPieChart: React.FC<Props> = ({ completed, total }) => {
             {activeTask && (
                 <PopUpWindow
                     visible={ true }
-                    fullText={{ text: activeTask.text, author: "", date: "" }}
+                    fullText={{
+                        text: activeTask?.title || "",
+                        author: activeTask?.description || "",
+                        date: activeTask?.created_at || ""
+                    }}
                     onClose={ () => setActiveTask(null) }
                 />
             )}
