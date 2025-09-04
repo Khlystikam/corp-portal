@@ -23,7 +23,7 @@ const initialState: CompletedTaskState = {
 	error: null,
 };
 
-// 🔹 async thunk для загрузки с бэка
+// async для загрузки с бэка
 export const fetchCompletedTasks = createAsyncThunk<
 	CompletedTask[],
 	number,
@@ -32,13 +32,13 @@ export const fetchCompletedTasks = createAsyncThunk<
 	"completedTask/fetchCompletedTasks",
 	async (userId, thunkAPI) => {
 		try {
-		const response = await fetch(
-			`https://projects.dev-khlystikam.ru/projects/php/corp-portal/getCompletedTasks.php?user_id=${userId}`
-		);
-		const data = await response.json();
-		return data.data; // сервер отдаёт { success, data: [...] }
+			const response = await fetch(
+				`https://projects.dev-khlystikam.ru/projects/php/corp-portal/getCompletedTasks.php?user_id=${userId}`
+			);
+			const data = await response.json();
+			return data.data;
 		} catch (err) {
-		return thunkAPI.rejectWithValue("Ошибка загрузки задач");
+			return thunkAPI.rejectWithValue("Ошибка загрузки задач");
 		}
 	}
 );
@@ -48,29 +48,29 @@ const completedTaskSlice = createSlice({
 	initialState,
 	reducers: {
 		addCompletedTask(state, action: PayloadAction<CompletedTask>) {
-		state.completedTasks.push(action.payload);
+			state.completedTasks.push(action.payload);
 		},
 
 		removeCompletedTask(state, action: PayloadAction<number>) {
-		state.completedTasks = state.completedTasks.filter(
-			(task) => task.id !== action.payload
-		);
+			state.completedTasks = state.completedTasks.filter(
+				(task) => task.id !== action.payload
+			);
 		},
 
 		updateTaskStatus(
 		state,
 		action: PayloadAction<{ id: number; status: number }>
 		) {
-		const task = state.completedTasks.find(
-			(task) => task.id === action.payload.id
-		);
-		if (task) {
-			task.status = action.payload.status;
-		}
+			const task = state.completedTasks.find(
+				(task) => task.id === action.payload.id
+			);
+			if (task) {
+				task.status = action.payload.status;
+			}
 		},
 
 		loadFromStorage(state, action: PayloadAction<CompletedTask[]>) {
-		state.completedTasks = action.payload;
+			state.completedTasks = action.payload;
 		},
 	},
 	extraReducers: (builder) => {

@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../../store/store';
-import { addTodo } from '../../../store/TodoData';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '../../../store/store';
+import { fetchCompletedTasks, addTodoAsync } from '../../../store/TodoData';
 import TodoForm from './TodoForm';
 
 const TodoMainComponent: React.FC = () => {
+    const userId = useSelector((state: RootState) => state.user.data?.id);
     const [text, setText] = useState('');
     const dispatch = useDispatch<AppDispatch>();
 
+    useEffect(() => {
+        if (userId) {
+            dispatch(fetchCompletedTasks(userId));
+        }
+    }, [userId, dispatch]);
+
+    
     const handleAdd = () => {
-        if (text.trim() === '') return; // пустые не добавляем
-        dispatch(addTodo(text));
+        if (!userId || text.trim() === '') return;
+
+        dispatch(addTodoAsync({
+            user_id: userId,
+            title: text,
+            description: '',
+            status: 0
+        }));
+
         setText('');
     };
 
@@ -41,6 +56,7 @@ const TodoMainComponent: React.FC = () => {
                     +
                 </button>
             </div>
+
             <TodoForm />
         </div>
     );

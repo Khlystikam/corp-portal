@@ -20,7 +20,7 @@ const CompletedTasks: React.FC = () => {
 
     useEffect(() => {
         if (userId) {
-        dispatch(fetchCompletedTasks(userId));
+            dispatch(fetchCompletedTasks(userId));
         }
     }, [userId, dispatch]);
 
@@ -59,7 +59,7 @@ const CompletedTasks: React.FC = () => {
             <div className="round-completed flex flex-col justify-center items-center gap-4">
                 <Check className="w-15 h-15 font-bold text-amber-50" />
                 <p className="round-completed-title text-amber-50 font-bold text-xl">
-                Completed!
+                    Completed!
                 </p>
             </div>
             );
@@ -81,41 +81,41 @@ const CompletedTasks: React.FC = () => {
         return (
         <div className="completed-task-elements flex flex-col justify-start items-center w-9/10 h-1/1 gap-3 rounded-xl">
             {completedTasks.map((task: CompletedTask) => {
-            const { id, status, title } = task;
-            const isCompleted = status === 1;
+                const { id, status, title } = task;
+                const isCompleted = status === 1;
 
-            return (
-                <div
-                key={id}
-                className={
-                    isCompleted ? classTaskElementsMade : classTaskElementsNoMade
-                }
-                onClick={() => openPopUpFullTask(task)}
-                >
-                <input
-                    className="completed-task-checkbox size-4 cursor-pointer"
-                    title="checkbox"
-                    type="checkbox"
-                    checked={isCompleted}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={() => handleToggleTask(task)}
-                />
-                <ul className="completed-task-box-value w-1/1 text-left">
-                    <li className="completed-task-item-value w-1/1">
-                    {title.length > 35 ? `${title.slice(0, 35)}...` : title}
-                    </li>
-                </ul>
-                </div>
-            );
+                return (
+                    <div
+                        key={id}
+                        className={
+                            isCompleted ? classTaskElementsMade : classTaskElementsNoMade
+                        }
+                        onClick={() => openPopUpFullTask(task)}
+                    >
+                    <input
+                        className="completed-task-checkbox size-4 cursor-pointer"
+                        title="checkbox"
+                        type="checkbox"
+                        checked={isCompleted}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={() => handleToggleTask(task)}
+                    />
+                        <ul className="completed-task-box-value w-1/1 text-left">
+                            <li className="completed-task-item-value w-1/1">
+                                {title.length > 35 ? `${title.slice(0, 35)}...` : title}
+                            </li>
+                        </ul>
+                    </div>
+                );
             })}
 
             {activeTask && (
                 <PopUpWindow
                     visible={!!activeTask}
                     fullText={{
-                        text: activeTask?.title || "",
-                        author: activeTask?.description || "",
-                        date: activeTask?.created_at || ""
+                        text: activeTask?.description || "",
+                        author: activeTask?.created_at || "",
+                        date: activeTask?.deadline || ""
                     }}
                     onClose={() => setActiveTask(null)}
                 />

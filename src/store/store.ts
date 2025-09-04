@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import todoReducer from './TodoData';
+import todoSlice from './TodoData';
 import completedTaskReducer from './CompletedTasksData';
 import userReducer from './userSlice';
 
@@ -21,7 +21,7 @@ const preloadedState = (() => {
 
 export const store = configureStore({
     reducer: {
-        todo: todoReducer,
+        todo: todoSlice,
         completedTask: completedTaskReducer,
         user: userReducer,
     },
