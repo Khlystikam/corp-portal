@@ -23,12 +23,11 @@ const initialState: CompletedTaskState = {
 	error: null,
 };
 
-// async для загрузки с бэка
 export const fetchCompletedTasks = createAsyncThunk<
 	CompletedTask[],
 	number,
 	{ rejectValue: string }
-	>(
+>(
 	"completedTask/fetchCompletedTasks",
 	async (userId, thunkAPI) => {
 		try {
@@ -37,10 +36,42 @@ export const fetchCompletedTasks = createAsyncThunk<
 			);
 			const data = await response.json();
 			return data.data;
-		} catch (err) {
+		} catch {
 			return thunkAPI.rejectWithValue("Ошибка загрузки задач");
 		}
 	}
+);
+
+// async для загрузки с бэка
+export const toggleCompletedTaskAsync = createAsyncThunk<
+    { id: number; status: number },
+    { user_id: number; id: number; status: number },
+    { rejectValue: string }
+>(
+    "completedTask/toggleCompletedTask",
+    async ({ user_id, id, status }, thunkAPI) => {
+        try {
+            const response = await fetch(
+                "https://projects.dev-khlystikam.ru/projects/php/corp-portal/toggleCompletedTasks.php",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id, id, status }),
+                }
+            );
+            const data = await response.json();
+
+            if (!data.success) {
+                return thunkAPI.rejectWithValue(
+                    data.message || "Ошибка изменения задачи"
+                );
+            }
+
+            return { id, status };
+        } catch {
+            return thunkAPI.rejectWithValue("Ошибка изменения задачи");
+        }
+    }
 );
 
 const completedTaskSlice = createSlice({
@@ -73,21 +104,31 @@ const completedTaskSlice = createSlice({
 			state.completedTasks = action.payload;
 		},
 	},
+
 	extraReducers: (builder) => {
 		builder
-		.addCase(fetchCompletedTasks.pending, (state) => {
-			state.loading = true;
-			state.error = null;
-		})
-		.addCase(fetchCompletedTasks.fulfilled, (state, action) => {
-			state.loading = false;
-			state.completedTasks = action.payload;
-		})
-		.addCase(fetchCompletedTasks.rejected, (state, action) => {
-			state.loading = false;
-			state.error = action.payload || "Ошибка";
-		});
-	},
+			.addCase(fetchCompletedTasks.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchCompletedTasks.fulfilled, (state, action) => {
+				state.loading = false;
+				state.completedTasks = action.payload;
+			})
+			.addCase(fetchCompletedTasks.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload || "Ошибка";
+			})
+			// обновление статуса через async
+			.addCase(toggleCompletedTaskAsync.fulfilled, (state, action) => {
+				const task = state.completedTasks.find(
+					(t) => t.id === action.payload.id
+				);
+				if (task) {
+					task.status = action.payload.status;
+				}
+			});
+	}
 });
 
 export const {

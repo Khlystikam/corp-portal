@@ -41,7 +41,7 @@ export const fetchCompletedTasks = createAsyncThunk<
 // добавление новой задачи
 export const addTodoAsync = createAsyncThunk<
 	Todo,
-	Omit<Todo, 'id'>, // на вход без id, он формируется в базе
+	Omit<Todo, 'id'>,
 	{ rejectValue: string }
 	>('todo/addTodo', async (newTodo, thunkAPI) => {
 	try {
@@ -72,7 +72,7 @@ export const removeTodoAsync = createAsyncThunk<
             const response = await fetch(
                 'https://projects.dev-khlystikam.ru/projects/php/corp-portal/deleteTodo.php',
                 {
-                    method: 'POST', // безопаснее использовать POST с телом JSON
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id, id }),
                 }

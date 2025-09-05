@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../store/store";
 import type { CompletedTask } from "../../../store/CompletedTasksData";
-import { fetchCompletedTasks, updateTaskStatus } from "../../../store/CompletedTasksData";
+import { fetchCompletedTasks, toggleCompletedTaskAsync } from "../../../store/CompletedTasksData";
 import type { AppDispatch } from "../../../store/store";
 import PopUpWindow from "../../../features/PopUpWindow/PopUpWindow";
 import TasksPieChart from "./TasksPieChart/TasksPieChart";
@@ -25,8 +25,9 @@ const CompletedTasks: React.FC = () => {
     }, [userId, dispatch]);
 
     const handleToggleTask = (task: CompletedTask) => {
+        if (!userId) return;
         const newStatus = task.status === 1 ? 0 : 1;
-        dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
+        dispatch(toggleCompletedTaskAsync({ user_id: userId, id: task.id, status: newStatus }));
     };
 
     // классы для отображения задач
@@ -46,31 +47,33 @@ const CompletedTasks: React.FC = () => {
     // функция вывода данных для диаграммы
     const progressBarCounts = () => {
         const completedTrueCount = completedTasks.filter(
-        (task) => task.status === 1
+            (task) => task.status === 1
         ).length;
+        
         const completedFalseCount = completedTasks.filter(
-        (task) => task.status === 0
+            (task) => task.status === 0
         ).length;
+
         const sumCompletedCount = completedTrueCount + completedFalseCount;
 
         const completedPieChart = () => {
-        if (sumCompletedCount > 0 && completedTrueCount === sumCompletedCount) {
-            return (
-            <div className="round-completed flex flex-col justify-center items-center gap-4">
-                <Check className="w-15 h-15 font-bold text-amber-50" />
-                <p className="round-completed-title text-amber-50 font-bold text-xl">
-                    Completed!
-                </p>
-            </div>
-            );
-        } else {
-            return (
-            <TasksPieChart
-                completed={completedTrueCount}
-                total={sumCompletedCount}
-            />
-            );
-        }
+            if (sumCompletedCount > 0 && completedTrueCount === sumCompletedCount) {
+                return (
+                <div className="round-completed flex flex-col justify-center items-center gap-4">
+                    <Check className="w-15 h-15 font-bold text-amber-50" />
+                    <p className="round-completed-title text-amber-50 font-bold text-xl">
+                        Completed!
+                    </p>
+                </div>
+                );
+            } else {
+                return (
+                <TasksPieChart
+                    completed={completedTrueCount}
+                    total={sumCompletedCount}
+                />
+                );
+            }
         };
 
         return <>{completedPieChart()}</>;
@@ -93,7 +96,7 @@ const CompletedTasks: React.FC = () => {
                         onClick={() => openPopUpFullTask(task)}
                     >
                     <input
-                        className="completed-task-checkbox size-4 cursor-pointer"
+                        className="completed-task-checkbox size-6 cursor-pointer"
                         title="checkbox"
                         type="checkbox"
                         checked={isCompleted}
@@ -126,19 +129,19 @@ const CompletedTasks: React.FC = () => {
 
     return (
         <div className="completed-task-main flex flex-row justify-between items-start w-1/1 h-1/1 rounded-xl p-4">
-        <div className="progress-bar-graphics flex flex-col justify-center items-center w-50/100">
-            <p className="completed-task-main-title flex flex-col justify-center items-center w-1/1 h-15/100 text-orange-200 font-bold mb-2">
-            Прогресс выполнения задач:
-            </p>
-            {progressBarCounts()}
-        </div>
+            <div className="progress-bar-graphics flex flex-col justify-center items-center w-50/100">
+                <p className="completed-task-main-title flex flex-col justify-center items-center w-1/1 h-15/100 text-orange-200 font-bold mb-2">
+                Прогресс выполнения задач:
+                </p>
+                {progressBarCounts()}
+            </div>
 
-        <div className="completed-task-wrapper w-50/100 h-1/1 overflow-y-auto">
-            <p className="completed-task-main-title flex flex-col justify-center items-center w-9/10 h-15/100 text-orange-200 font-bold m-2">
-            Текущие задачи месяца:
-            </p>
-            {taskElements()}
-        </div>
+            <div className="completed-task-wrapper w-50/100 h-1/1 overflow-y-auto">
+                <p className="completed-task-main-title flex flex-col justify-center items-center w-9/10 h-15/100 text-orange-200 font-bold m-2">
+                Текущие задачи месяца:
+                </p>
+                {taskElements()}
+            </div>
         </div>
     );
 };

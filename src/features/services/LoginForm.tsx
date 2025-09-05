@@ -19,15 +19,23 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [error, setError] = useState<string>("");
+	const [copied, setCopied] = useState(false);
 
 	if (!visible) return null;
+
+	const copyDemoData = (text:string) => {
+		navigator.clipboard.writeText(text);
+		setCopied(true);
+
+		setTimeout(() => setCopied(false), 2000);
+	}
 
 	const loginDemo = () => (
 		<span className={styles.colorFocus}>
 			<button
 				className="cursor-pointer"
 				title="button"
-				onClick={()=> navigator.clipboard.writeText("logindemo@dev-khlystikam.ru")}
+				onClick={()=> copyDemoData("logindemo@dev-khlystikam.ru")}
 			>
 				logindemo@dev-khlystikam.ru
 			</button>
@@ -39,7 +47,7 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 			<button
 				className="cursor-pointer"
 				title="button"
-				onClick={()=> navigator.clipboard.writeText("passwordLoginDemo")}
+				onClick={()=> copyDemoData("passwordLoginDemo")}
 			>
 				passwordLoginDemo
 			</button>
@@ -68,8 +76,6 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 			const data = await response.json();
 
 			if (data.success) {
-				console.log(data);
-				console.log(data.user.name);
 				dispatch(setUser(data.user));
 				onActive();
 			} else {
@@ -130,6 +136,12 @@ const LoginForm: React.FC<Props> = ({ visible, onClose, onActive }) => {
 				>
 					<img src="./assets/popup/close-icon.svg" alt="close-icon" />
 				</button>
+
+				{copied && (
+					<div className={styles.copiedBox}>
+						Скопировалось!
+					</div>
+				)}
 			</div>
 		</div>,
 		document.body

@@ -107,3 +107,13 @@
 	border: none;
 	cursor: pointer;
 }
+
+.copiedBox {
+	position: absolute;
+	top: -50%;
+	left: 45%;
+	color: #FFD7A8;
+	padding: 10px;
+	border-radius: 15px;
+	background: #4577a073;
+}

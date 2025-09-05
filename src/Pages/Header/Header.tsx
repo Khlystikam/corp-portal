@@ -30,7 +30,7 @@ const Header: React.FC = () => {
 				</form>
 			</div>
 
-			<div className="login-form-menu flex items-center justify-center w-1/10 h-1/1">
+			<div className="login-form-menu flex items-center justify-center xl:w-1/10 h-1/1 lg:w-2/10">
 				<UserMenu />
 			</div>
 		</div>
